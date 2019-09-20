@@ -82,3 +82,39 @@ for (var i = 0; i < RENTS_NUMBER; i++) {
 }
 
 pins.appendChild(fragment);
+
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+
+var cardFragment = document.createDocumentFragment();
+
+function renderRentDescription(objects) {
+  var cardElement = cardTemplate.cloneNode(true);
+  var cardTitle = cardElement.querySelector('.popup__title');
+  var cardAddress = cardElement.querySelector('.popup__text--address');
+  var cardPrice = cardElement.querySelector('.popup__text--price');
+  var cardType = cardElement.querySelector('.popup__type');
+  var cardGuests = cardElement.querySelector('.popup__text--capacity');
+  var cardTime = cardElement.querySelector('.popup__text--time');
+  var cardFeatures = cardElement.querySelector('.popup__features');
+  var cardDescription = cardElement.querySelector('.popup__description');
+  var cardPhotos = cardElement.querySelector('.popup__photos').querySelector('img');
+  var cardAvatar = cardElement.querySelector('.popup__avatar');
+
+  cardTitle.textContent = objects[0].offer.title;
+  cardAddress.textContent = objects[0].offer.address;
+  cardPrice.textContent = objects[0].offer.price;
+  cardType.textContent = objects[0].offer.type;
+  cardGuests.textContent = objects[0].offer.rooms + ' комнаты для ' + objects[0].offer.guests + 'гостей';
+  cardTime.textContent = 'заезд после ' + objects[0].offer.checkin + ', выезд до ' + objects[0].offer.checkout;
+  cardFeatures.textContent = objects[0].offer.features;
+  cardDescription.textContent = objects[0].offer.description;
+  cardPhotos.setAttribute('src', objects[0].offer.photos);
+  cardAvatar.setAttribute('src', objects[0].author.avatar);
+
+  return cardElement;
+}
+
+cardFragment.appendChild(renderRentDescription(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)));
+var mapFilters = MAP.querySelector('.map__filters-container');
+
+mapFilters.prepend(cardFragment);
