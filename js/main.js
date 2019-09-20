@@ -33,7 +33,7 @@ function getOfferDescription(title, text) {
 function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime, offerFeatures, offerPhotos) {
   var rents = [];
 
-  for (var i = 1; i <= 8; i++) {
+  for (var i = 1; i <= RENTS_NUMBER; i++) {
     rents.push({
       'author': {'avatar': 'img/avatars/user0' + i + '.png'},
 
