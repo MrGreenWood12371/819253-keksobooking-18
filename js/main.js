@@ -5,6 +5,11 @@ var OFFER_TIME = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var AVATAR_SIZE = 40;
+var RENTS_NUMBER = 8;
+var X_LOCATION_START = 1;
+var X_LOCATION_END = 1200;
+var Y_LOCATION_START = 130;
+var Y_LOCATION_END = 630;
 
 function getRandomValue(arr) {
   return Math.floor(Math.random() * arr.length);
@@ -46,8 +51,8 @@ function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime,
         'photos': offerPhotos[getRandomValue(offerPhotos)]
       },
       'location': {
-        'x': getRandomInt(1, 1200),
-        'y': getRandomInt(130, 630)
+        'x': getRandomInt(X_LOCATION_START, X_LOCATION_END),
+        'y': getRandomInt(Y_LOCATION_START, Y_LOCATION_END)
       }
     });
   }
@@ -72,7 +77,7 @@ function renderNewRent(objects) {
 }
 
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < 8; i++) {
+for (var i = 0; i < RENTS_NUMBER; i++) {
   fragment.appendChild(renderNewRent(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)[i]));
 }
 
