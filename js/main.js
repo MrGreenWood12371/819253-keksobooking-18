@@ -149,7 +149,7 @@ function openMap() {
   activateElem(adElements);
   activateElem(mapFilters);
   adForm.classList.remove('ad-form--disabled');
-  hotelAddress.value = 'x: ' + getRandomInt(X_LOCATION_START, X_LOCATION_END) + ', y: ' + getRandomInt(Y_LOCATION_START, Y_LOCATION_END);
+  hotelAddress.value = getRandomInt(X_LOCATION_START, X_LOCATION_END) + ', ' + getRandomInt(Y_LOCATION_START, Y_LOCATION_END);
 }
 
 function onPinEnterPress(evt) {
@@ -158,19 +158,50 @@ function onPinEnterPress(evt) {
   }
 }
 
+function disableCapacity(elem, arr) {
+  for (var i = 0; i < arr.length; i++) {
+    elem[arr[i]].setAttribute('disabled', '');
+  }
+}
+
+function activateCapacity(elem, arr) {
+  for (var i = 0; i < arr.length; i++) {
+    elem[arr[i]].removeAttribute('disabled');
+  }
+}
+
 mainPin.addEventListener('click', openMap);
 
 mainPin.addEventListener('keydown', onPinEnterPress);
 
 var roomsInputElement = adForm.querySelector('#room_number');
+var capacityInputElement = adForm.querySelector('#capacity');
+var capacityOptions = capacityInputElement.options;
 
 function calculateRoomsAndCapacity() {
   var roomNumber = adForm.querySelector('#room_number').value;
-  var guestNumber = adForm.querySelector('#capacity').value;
-  if (+roomNumber < +guestNumber) {
-    roomsInputElement.setCustomValidity('В такое количество комнат не влезет столько человек!');
-  } else {
-    roomsInputElement.setCustomValidity('');
+
+  switch (roomNumber) {
+    case '1':
+      disableCapacity(capacityOptions, [0, 1, 3]);
+      capacityOptions[2].selected = true;
+      activateCapacity(capacityOptions, [2]);
+      break;
+    case '2':
+      disableCapacity(capacityOptions, [0, 2, 3]);
+      activateCapacity(capacityOptions, [1, 2]);
+      capacityOptions[1].selected = true;
+      break;
+    case '3':
+      disableCapacity(capacityOptions, [1, 2, 3]);
+      activateCapacity(capacityOptions, [0, 1, 2]);
+      capacityOptions[0].selected = true;
+      break;
+    case '100':
+      disableCapacity(capacityOptions, [0, 1, 2]);
+      activateCapacity(capacityOptions, [3]);
+      capacityOptions[3].selected = true;
+      break;
   }
 }
 
