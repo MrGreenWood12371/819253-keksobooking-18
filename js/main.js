@@ -4,12 +4,28 @@ var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var OFFER_TIME = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var AVATAR_SIZE = 40;
+// var AVATAR_SIZE = 40;
 var RENTS_NUMBER = 8;
 var X_LOCATION_START = 1;
 var X_LOCATION_END = 1200;
 var Y_LOCATION_START = 130;
 var Y_LOCATION_END = 630;
+var ENTER_KEYCODE = 13;
+var MAP = document.querySelector('.map');
+var pins = document.querySelector('.map__pins');
+var fragment = document.createDocumentFragment();
+pins.appendChild(fragment);
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var cardFragment = document.createDocumentFragment();
+var adForm = document.querySelector('.ad-form');
+var adElements = adForm.children;
+var mapFilters = document.querySelector('.map__filters').children;
+var adSubmitButton = document.querySelector('.ad-form__submit');
+var mainPin = document.querySelector('.map__pin--main');
+var hotelAddress = document.querySelector('#address');
+var roomsInputElement = adForm.querySelector('#room_number');
+var capacityInputElement = adForm.querySelector('#capacity');
+var capacityOptions = capacityInputElement.options;
 
 function getRandomValue(arr) {
   return Math.floor(Math.random() * arr.length);
@@ -59,33 +75,22 @@ function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime,
   return rents;
 }
 
-var MAP = document.querySelector('.map');
-MAP.classList.remove('map--faded');
+// var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
-var pins = document.querySelector('.map__pins');
+// function renderNewRent(objects) {
+//   var pinElement = PIN_TEMPLATE.cloneNode(true);
+//   var pinImage = pinElement.querySelector('img');
 
-function renderNewRent(objects) {
-  var pinElement = PIN_TEMPLATE.cloneNode(true);
-  var pinImage = pinElement.querySelector('img');
+//   pinElement.setAttribute('style', 'left: ' + (+objects.location.x - (AVATAR_SIZE / 2)) + 'px; ' + 'top: ' + (+objects.location.y - AVATAR_SIZE) + 'px;');
+//   pinImage.setAttribute('src', objects.author.avatar);
+//   pinElement.setAttribute('alt', objects.offer.title);
 
-  pinElement.setAttribute('style', 'left: ' + (+objects.location.x - (AVATAR_SIZE / 2)) + 'px; ' + 'top: ' + (+objects.location.y - AVATAR_SIZE) + 'px;');
-  pinImage.setAttribute('src', objects.author.avatar);
-  pinElement.setAttribute('alt', objects.offer.title);
+//   return pinElement;
+// }
 
-  return pinElement;
-}
-
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < RENTS_NUMBER; i++) {
-  fragment.appendChild(renderNewRent(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)[i]));
-}
-
-pins.appendChild(fragment);
-
-var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-
-var cardFragment = document.createDocumentFragment();
+// for (var i = 0; i < RENTS_NUMBER; i++) {
+//   fragment.appendChild(renderNewRent(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)[i]));
+// }
 
 function renderRentDescription(objects) {
   var cardElement = cardTemplate.cloneNode(true);
@@ -115,6 +120,87 @@ function renderRentDescription(objects) {
 }
 
 cardFragment.appendChild(renderRentDescription(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)));
-var mapFilters = MAP.querySelector('.map__filters-container');
+// var mapFilters = MAP.querySelector('.map__filters-container');
 
-mapFilters.prepend(cardFragment);
+// mapFilters.prepend(cardFragment);
+
+function disableElem(elem) {
+  for (var i = 0; i < elem.length; i++) {
+    elem[i].setAttribute('disabled', '');
+  }
+}
+
+function activateElem(elem) {
+  for (var i = 0; i < elem.length; i++) {
+    elem[i].removeAttribute('disabled');
+  }
+}
+
+disableElem(adElements);
+
+disableElem(mapFilters);
+
+function openMap() {
+  MAP.classList.remove('map--faded');
+  activateElem(adElements);
+  activateElem(mapFilters);
+  adForm.classList.remove('ad-form--disabled');
+  hotelAddress.value = getRandomInt(X_LOCATION_START, X_LOCATION_END) + ', ' + getRandomInt(Y_LOCATION_START, Y_LOCATION_END);
+}
+
+function onPinEnterPress(evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openMap();
+  }
+}
+
+function disableCapacity(elem, arr) {
+  for (var i = 0; i < arr.length; i++) {
+    elem[arr[i]].setAttribute('disabled', '');
+  }
+}
+
+function activateCapacity(elem, arr) {
+  for (var i = 0; i < arr.length; i++) {
+    elem[arr[i]].removeAttribute('disabled');
+  }
+}
+
+mainPin.addEventListener('click', openMap);
+
+mainPin.addEventListener('keydown', onPinEnterPress);
+
+function calculateRoomsAndCapacity() {
+  var roomNumber = adForm.querySelector('#room_number').value;
+
+  switch (roomNumber) {
+    case '1':
+      disableCapacity(capacityOptions, [0, 1, 3]);
+      capacityOptions[2].selected = true;
+      activateCapacity(capacityOptions, [2]);
+      break;
+    case '2':
+      disableCapacity(capacityOptions, [0, 2, 3]);
+      activateCapacity(capacityOptions, [1, 2]);
+      capacityOptions[1].selected = true;
+      break;
+    case '3':
+      disableCapacity(capacityOptions, [1, 2, 3]);
+      activateCapacity(capacityOptions, [0, 1, 2]);
+      capacityOptions[0].selected = true;
+      break;
+    case '100':
+      disableCapacity(capacityOptions, [0, 1, 2]);
+      activateCapacity(capacityOptions, [3]);
+      capacityOptions[3].selected = true;
+      break;
+  }
+}
+
+function onRoomsInputChange() {
+  calculateRoomsAndCapacity();
+}
+
+roomsInputElement.addEventListener('change', onRoomsInputChange);
+
+adSubmitButton.addEventListener('click', onRoomsInputChange);
