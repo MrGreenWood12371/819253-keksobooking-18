@@ -11,6 +11,21 @@ var X_LOCATION_END = 1200;
 var Y_LOCATION_START = 130;
 var Y_LOCATION_END = 630;
 var ENTER_KEYCODE = 13;
+var MAP = document.querySelector('.map');
+var pins = document.querySelector('.map__pins');
+var fragment = document.createDocumentFragment();
+pins.appendChild(fragment);
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var cardFragment = document.createDocumentFragment();
+var adForm = document.querySelector('.ad-form');
+var adElements = adForm.children;
+var mapFilters = document.querySelector('.map__filters').children;
+var adSubmitButton = document.querySelector('.ad-form__submit');
+var mainPin = document.querySelector('.map__pin--main');
+var hotelAddress = document.querySelector('#address');
+var roomsInputElement = adForm.querySelector('#room_number');
+var capacityInputElement = adForm.querySelector('#capacity');
+var capacityOptions = capacityInputElement.options;
 
 function getRandomValue(arr) {
   return Math.floor(Math.random() * arr.length);
@@ -60,11 +75,7 @@ function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime,
   return rents;
 }
 
-var MAP = document.querySelector('.map');
-
-
 // var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
-var pins = document.querySelector('.map__pins');
 
 // function renderNewRent(objects) {
 //   var pinElement = PIN_TEMPLATE.cloneNode(true);
@@ -77,16 +88,9 @@ var pins = document.querySelector('.map__pins');
 //   return pinElement;
 // }
 
-var fragment = document.createDocumentFragment();
 // for (var i = 0; i < RENTS_NUMBER; i++) {
 //   fragment.appendChild(renderNewRent(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)[i]));
 // }
-
-pins.appendChild(fragment);
-
-var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-
-var cardFragment = document.createDocumentFragment();
 
 function renderRentDescription(objects) {
   var cardElement = cardTemplate.cloneNode(true);
@@ -132,17 +136,9 @@ function activateElem(elem) {
   }
 }
 
-var adForm = document.querySelector('.ad-form');
-var adElements = adForm.children;
-
 disableElem(adElements);
 
-var mapFilters = document.querySelector('.map__filters').children;
-
 disableElem(mapFilters);
-
-var mainPin = document.querySelector('.map__pin--main');
-var hotelAddress = document.querySelector('#address');
 
 function openMap() {
   MAP.classList.remove('map--faded');
@@ -173,10 +169,6 @@ function activateCapacity(elem, arr) {
 mainPin.addEventListener('click', openMap);
 
 mainPin.addEventListener('keydown', onPinEnterPress);
-
-var roomsInputElement = adForm.querySelector('#room_number');
-var capacityInputElement = adForm.querySelector('#capacity');
-var capacityOptions = capacityInputElement.options;
 
 function calculateRoomsAndCapacity() {
   var roomNumber = adForm.querySelector('#room_number').value;
@@ -210,7 +202,5 @@ function onRoomsInputChange() {
 }
 
 roomsInputElement.addEventListener('change', onRoomsInputChange);
-
-var adSubmitButton = document.querySelector('.ad-form__submit');
 
 adSubmitButton.addEventListener('click', onRoomsInputChange);
