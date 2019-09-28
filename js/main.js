@@ -4,7 +4,7 @@ var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var OFFER_TIME = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-// var AVATAR_SIZE = 40;
+var AVATAR_SIZE = 40;
 var RENTS_NUMBER = 8;
 var X_LOCATION_START = 1;
 var X_LOCATION_END = 1200;
@@ -14,18 +14,27 @@ var ENTER_KEYCODE = 13;
 var MAP = document.querySelector('.map');
 var pins = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
-pins.appendChild(fragment);
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var cardFragment = document.createDocumentFragment();
 var adForm = document.querySelector('.ad-form');
 var adElements = adForm.children;
-var mapFilters = document.querySelector('.map__filters').children;
 var adSubmitButton = document.querySelector('.ad-form__submit');
 var mainPin = document.querySelector('.map__pin--main');
 var hotelAddress = document.querySelector('#address');
 var roomsInputElement = adForm.querySelector('#room_number');
 var capacityInputElement = adForm.querySelector('#capacity');
 var capacityOptions = capacityInputElement.options;
+var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
+var ESC_KEYCODE = 27;
+var roomTypeInput = adForm.querySelector('#type');
+var checkInTime = adForm.querySelector('#timein');
+var checkOutTime = adForm.querySelector('#timeout');
+var resetButton = document.querySelector('.ad-form__reset');
+
+
+function getPhotos() {
+  return PHOTOS.slice(0, PHOTOS.length);
+}
 
 function getRandomValue(arr) {
   return Math.floor(Math.random() * arr.length);
@@ -46,7 +55,7 @@ function getOfferDescription(title, text) {
   return [title, text];
 }
 
-function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime, offerFeatures, offerPhotos) {
+function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime, offerFeatures) {
   var rents = [];
 
   for (var i = 1; i <= RENTS_NUMBER; i++) {
@@ -64,7 +73,7 @@ function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime,
         'checkout': checkTime[1],
         'features': offerFeatures[getRandomValue(offerFeatures)],
         'description': offerText[1],
-        'photos': offerPhotos[getRandomValue(offerPhotos)]
+        'photos': getPhotos()
       },
       'location': {
         'x': getRandomInt(X_LOCATION_START, X_LOCATION_END),
@@ -75,24 +84,22 @@ function getNewRent(offerText, offerTypes, roomsNumber, guestsNumber, checkTime,
   return rents;
 }
 
-// var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
+function renderNewRent(objects) {
+  var pinElement = PIN_TEMPLATE.cloneNode(true);
+  var pinImage = pinElement.querySelector('img');
 
-// function renderNewRent(objects) {
-//   var pinElement = PIN_TEMPLATE.cloneNode(true);
-//   var pinImage = pinElement.querySelector('img');
+  pinElement.setAttribute('style', 'left: ' + (+objects.location.x - (AVATAR_SIZE / 2)) + 'px; ' + 'top: ' + (+objects.location.y - AVATAR_SIZE) + 'px;');
+  pinImage.setAttribute('src', objects.author.avatar);
+  pinElement.setAttribute('alt', objects.offer.title);
 
-//   pinElement.setAttribute('style', 'left: ' + (+objects.location.x - (AVATAR_SIZE / 2)) + 'px; ' + 'top: ' + (+objects.location.y - AVATAR_SIZE) + 'px;');
-//   pinImage.setAttribute('src', objects.author.avatar);
-//   pinElement.setAttribute('alt', objects.offer.title);
+  return pinElement;
+}
 
-//   return pinElement;
-// }
+for (var j = 0; j < RENTS_NUMBER; j++) {
+  fragment.appendChild(renderNewRent(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES)[j]));
+}
 
-// for (var i = 0; i < RENTS_NUMBER; i++) {
-//   fragment.appendChild(renderNewRent(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)[i]));
-// }
-
-function renderRentDescription(objects) {
+function renderRentDescription(objects, i) {
   var cardElement = cardTemplate.cloneNode(true);
   var cardTitle = cardElement.querySelector('.popup__title');
   var cardAddress = cardElement.querySelector('.popup__text--address');
@@ -102,27 +109,38 @@ function renderRentDescription(objects) {
   var cardTime = cardElement.querySelector('.popup__text--time');
   var cardFeatures = cardElement.querySelector('.popup__features');
   var cardDescription = cardElement.querySelector('.popup__description');
+  var cardPhotosContainer = cardElement.querySelector('.popup__photos');
   var cardPhotos = cardElement.querySelector('.popup__photos').querySelector('img');
   var cardAvatar = cardElement.querySelector('.popup__avatar');
 
-  cardTitle.textContent = objects[0].offer.title;
-  cardAddress.textContent = objects[0].offer.address;
-  cardPrice.textContent = objects[0].offer.price;
-  cardType.textContent = objects[0].offer.type;
-  cardGuests.textContent = objects[0].offer.rooms + ' комнаты для ' + objects[0].offer.guests + 'гостей';
-  cardTime.textContent = 'заезд после ' + objects[0].offer.checkin + ', выезд до ' + objects[0].offer.checkout;
-  cardFeatures.textContent = objects[0].offer.features;
-  cardDescription.textContent = objects[0].offer.description;
-  cardPhotos.setAttribute('src', objects[0].offer.photos);
-  cardAvatar.setAttribute('src', objects[0].author.avatar);
+  cardTitle.textContent = objects[i].offer.title;
+  cardAddress.textContent = objects[i].offer.address;
+  cardPrice.textContent = objects[i].offer.price;
+  cardType.textContent = objects[i].offer.type;
+  cardGuests.textContent = objects[i].offer.rooms + ' комнаты для ' + objects[i].offer.guests + 'гостей';
+  cardTime.textContent = 'заезд после ' + objects[i].offer.checkin + ', выезд до ' + objects[i].offer.checkout;
+  cardFeatures.textContent = objects[i].offer.features;
+  cardDescription.textContent = objects[i].offer.description;
+
+  objects[i].offer.photos.forEach(function (item) {
+    var cardImage = document.createElement('img');
+    cardImage.src = item;
+    cardImage.classList.add('popup__photo');
+    cardImage.setAttribute('width', '45');
+    cardImage.setAttribute('height', '40');
+    cardImage.setAttribute('alt', 'Фотография жилья');
+    cardPhotosContainer.appendChild(cardImage);
+  });
+  cardPhotosContainer.removeChild(cardPhotos);
+
+
+  cardAvatar.setAttribute('src', objects[i].author.avatar);
 
   return cardElement;
 }
 
-cardFragment.appendChild(renderRentDescription(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES, PHOTOS)));
-// var mapFilters = MAP.querySelector('.map__filters-container');
 
-// mapFilters.prepend(cardFragment);
+var mapFilters = MAP.querySelector('.map__filters-container');
 
 function disableElem(elem) {
   for (var i = 0; i < elem.length; i++) {
@@ -140,12 +158,51 @@ disableElem(adElements);
 
 disableElem(mapFilters);
 
+function closeCard() {
+  var mapCard = document.querySelector('.map__card');
+  if (mapCard) {
+    mapCard.remove();
+  }
+}
+
+function openPin(evt, i) {
+  closeCard();
+  cardFragment.appendChild(renderRentDescription(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES), i));
+  mapFilters.prepend(cardFragment);
+  var openedCard = document.querySelector('.map__card');
+  openedCard.querySelector('.popup__close').addEventListener('click', function () {
+    openedCard.remove();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.keyCode === ESC_KEYCODE) {
+      openedCard.remove();
+    }
+  });
+}
+
+function addPinListeners(elements) {
+  elements.forEach(function (el, i) {
+    elements[i].addEventListener('click', function (evt) {
+      openPin(evt, i);
+    });
+  });
+}
+
+function setAddresValue() {
+  hotelAddress.value = getRandomInt(X_LOCATION_START, X_LOCATION_END) + ', ' + getRandomInt(Y_LOCATION_START, Y_LOCATION_END);
+}
+
 function openMap() {
   MAP.classList.remove('map--faded');
   activateElem(adElements);
   activateElem(mapFilters);
   adForm.classList.remove('ad-form--disabled');
-  hotelAddress.value = getRandomInt(X_LOCATION_START, X_LOCATION_END) + ', ' + getRandomInt(Y_LOCATION_START, Y_LOCATION_END);
+  setAddresValue();
+  pins.appendChild(fragment);
+  var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  addPinListeners(pinElements);
+  mainPin.removeEventListener('click', openMap);
+  mainPin.removeEventListener('keydown', onPinEnterPress);
 }
 
 function onPinEnterPress(evt) {
@@ -204,3 +261,84 @@ function onRoomsInputChange() {
 roomsInputElement.addEventListener('change', onRoomsInputChange);
 
 adSubmitButton.addEventListener('click', onRoomsInputChange);
+
+function calculateMinPrice() {
+  var roomType = adForm.querySelector('#type').value;
+  var roomPrice = adForm.querySelector('#price');
+
+  switch (roomType) {
+    case 'bungalo':
+      roomPrice.setAttribute('min', '0');
+      break;
+    case 'flat':
+      roomPrice.setAttribute('min', '1000');
+      break;
+    case 'house':
+      roomPrice.setAttribute('min', '5000');
+      break;
+    case 'palace':
+      roomPrice.setAttribute('min', '10000');
+      break;
+  }
+}
+
+function onRoomTypeChange() {
+  calculateMinPrice();
+}
+
+roomTypeInput.addEventListener('change', onRoomTypeChange);
+
+function calculateInTime() {
+  switch (checkInTime.value) {
+    case '12:00':
+      checkOutTime.options[0].selected = true;
+      break;
+    case '13:00':
+      checkOutTime.options[1].selected = true;
+      break;
+    case '14:00':
+      checkOutTime.options[2].selected = true;
+      break;
+  }
+}
+
+function calculateOutTime() {
+  switch (checkOutTime.value) {
+    case '12:00':
+      checkInTime.options[0].selected = true;
+      break;
+    case '13:00':
+      checkInTime.options[1].selected = true;
+      break;
+    case '14:00':
+      checkInTime.options[2].selected = true;
+      break;
+  }
+}
+
+function onInTimeChange() {
+  calculateInTime();
+}
+
+function onOutTimeChange() {
+  calculateOutTime();
+}
+
+checkInTime.addEventListener('change', onInTimeChange);
+checkOutTime.addEventListener('change', onOutTimeChange);
+
+function mapRest() {
+  closeCard();
+  var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  MAP.classList.add('map--faded');
+  disableElem(adElements);
+  disableElem(mapFilters);
+  similarPins.forEach(function (el) {
+    el.remove();
+  });
+  adForm.classList.add('ad-form--disabled');
+  mainPin.addEventListener('click', openMap);
+  mainPin.addEventListener('keydown', onPinEnterPress);
+}
+
+resetButton.addEventListener('click', mapRest);
