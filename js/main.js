@@ -29,6 +29,7 @@ var ESC_KEYCODE = 27;
 var roomTypeInput = adForm.querySelector('#type');
 var checkInTime = adForm.querySelector('#timein');
 var checkOutTime = adForm.querySelector('#timeout');
+var resetButton = document.querySelector('.ad-form__reset');
 
 
 function getPhotos() {
@@ -138,7 +139,7 @@ function renderRentDescription(objects, i) {
   return cardElement;
 }
 
-cardFragment.appendChild(renderRentDescription(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES), 0));
+
 var mapFilters = MAP.querySelector('.map__filters-container');
 
 function disableElem(elem) {
@@ -157,16 +158,24 @@ disableElem(adElements);
 
 disableElem(mapFilters);
 
+function closeCard() {
+  var mapCard = document.querySelector('.map__card');
+  if (mapCard) {
+    mapCard.remove();
+  }
+}
+
 function openPin(evt, i) {
+  closeCard();
   cardFragment.appendChild(renderRentDescription(getNewRent(getOfferDescription('hi', 'kupislona'), OFFER_TYPES, 2, 2, getOfferTime(OFFER_TIME, OFFER_TIME), FEATURES), i));
   mapFilters.prepend(cardFragment);
   var openedCard = document.querySelector('.map__card');
   openedCard.querySelector('.popup__close').addEventListener('click', function () {
-    openedCard.classList.add('hidden');
+    openedCard.remove();
   });
   document.addEventListener('keydown', function (e) {
     if (e.keyCode === ESC_KEYCODE) {
-      openedCard.classList.add('hidden');
+      openedCard.remove();
     }
   });
 }
@@ -179,23 +188,17 @@ function addPinListeners(elements) {
   });
 }
 
+function setAddresValue() {
+  hotelAddress.value = getRandomInt(X_LOCATION_START, X_LOCATION_END) + ', ' + getRandomInt(Y_LOCATION_START, Y_LOCATION_END);
+}
+
 function openMap() {
   MAP.classList.remove('map--faded');
   activateElem(adElements);
   activateElem(mapFilters);
   adForm.classList.remove('ad-form--disabled');
-  hotelAddress.value = getRandomInt(X_LOCATION_START, X_LOCATION_END) + ', ' + getRandomInt(Y_LOCATION_START, Y_LOCATION_END);
+  setAddresValue();
   pins.appendChild(fragment);
-  mapFilters.prepend(cardFragment);
-  var openedCard = document.querySelector('.map__card');
-  openedCard.querySelector('.popup__close').addEventListener('click', function () {
-    openedCard.classList.add('hidden');
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.keyCode === ESC_KEYCODE) {
-      openedCard.classList.add('hidden');
-    }
-  });
   var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
   addPinListeners(pinElements);
   mainPin.removeEventListener('click', openMap);
@@ -323,3 +326,19 @@ function onOutTimeChange() {
 
 checkInTime.addEventListener('change', onInTimeChange);
 checkOutTime.addEventListener('change', onOutTimeChange);
+
+function mapRest() {
+  closeCard();
+  var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  MAP.classList.add('map--faded');
+  disableElem(adElements);
+  disableElem(mapFilters);
+  similarPins.forEach(function (el) {
+    el.remove();
+  });
+  adForm.classList.add('ad-form--disabled');
+  mainPin.addEventListener('click', openMap);
+  mainPin.addEventListener('keydown', onPinEnterPress);
+}
+
+resetButton.addEventListener('click', mapRest);
