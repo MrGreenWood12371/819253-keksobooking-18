@@ -13,15 +13,12 @@ window.form = (function () {
   var mapFilters = window.map.MAP.querySelector('.map__filters-container');
   var mainPin = document.querySelector('.map__pin--main');
 
-  function disableElem(elem) {
-    for (var i = 0; i < elem.length; i++) {
-      elem[i].setAttribute('disabled', '');
-    }
-  }
-
-  function disableCapacity(elem, arr) {
+  function disableElem(arr, elem) {
     for (var i = 0; i < arr.length; i++) {
-      elem[arr[i]].setAttribute('disabled', '');
+      if (arr[i] === elem) {
+        continue;
+      }
+      arr[i].setAttribute('disabled', '');
     }
   }
 
@@ -36,22 +33,22 @@ window.form = (function () {
 
     switch (roomNumber) {
       case '1':
-        disableCapacity(capacityOptions, [0, 1, 3]);
+        disableElem(capacityOptions, 2);
         capacityOptions[2].selected = true;
         activateCapacity(capacityOptions, [2]);
         break;
       case '2':
-        disableCapacity(capacityOptions, [0, 2, 3]);
+        disableElem(capacityOptions, 1);
         activateCapacity(capacityOptions, [1, 2]);
         capacityOptions[1].selected = true;
         break;
       case '3':
-        disableCapacity(capacityOptions, [1, 2, 3]);
+        disableElem(capacityOptions, 0);
         activateCapacity(capacityOptions, [0, 1, 2]);
         capacityOptions[0].selected = true;
         break;
       case '100':
-        disableCapacity(capacityOptions, [0, 1, 2]);
+        disableElem(capacityOptions, 3);
         activateCapacity(capacityOptions, [3]);
         capacityOptions[3].selected = true;
         break;
@@ -77,15 +74,19 @@ window.form = (function () {
     switch (roomType) {
       case 'bungalo':
         roomPrice.setAttribute('min', '0');
+        roomPrice.setAttribute('placeholder', '0');
         break;
       case 'flat':
         roomPrice.setAttribute('min', '1000');
+        roomPrice.setAttribute('placeholder', '1000');
         break;
       case 'house':
         roomPrice.setAttribute('min', '5000');
+        roomPrice.setAttribute('placeholder', '5000');
         break;
       case 'palace':
         roomPrice.setAttribute('min', '10000');
+        roomPrice.setAttribute('placeholder', '10000');
         break;
     }
   }

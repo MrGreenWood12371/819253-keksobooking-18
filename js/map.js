@@ -25,14 +25,8 @@ window.map = (function () {
     cardFragment.appendChild(window.card.renderRentDescription(window.data.getNewRent(window.data.getOfferDescription('hi', 'kupislona'), window.util.OFFER_TYPES, 2, 2, window.util.getOfferTime(window.util.OFFER_TIME, window.util.OFFER_TIME), window.util.FEATURES), i));
     window.form.mapFilters.prepend(cardFragment);
     var openedCard = document.querySelector('.map__card');
-    openedCard.querySelector('.popup__close').addEventListener('click', function () {
-      openedCard.remove();
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.keyCode === window.util.ESC_KEYCODE) {
-        openedCard.remove();
-      }
-    });
+    openedCard.querySelector('.popup__close').addEventListener('click', window.util.closeCard);
+    document.addEventListener('keydown', window.util.onCardEscClick);
   }
 
   function addPinListeners(elements) {

@@ -10,10 +10,17 @@ window.util = (function () {
     OFFER_TIME: ['12:00', '13:00', '14:00'],
     FEATURES: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
     AVATAR_SIZE: 40,
+    onCardEscClick: function (evt) {
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
+        window.util.closeCard();
+      }
+    },
     closeCard: function () {
       var mapCard = document.querySelector('.map__card');
       if (mapCard) {
         mapCard.remove();
+        mapCard.querySelector('.popup__close').removeEventListener('click', this.closeCard);
+        document.removeEventListener('keydown', window.util.onCardEscClick);
       }
     },
     getRandomValue: function (arr) {
