@@ -48,6 +48,7 @@ window.map = (function () {
   }
 
   function openMap() {
+    window.pin.addPinToTemplate();
     window.map.MAP.classList.remove('map--faded');
     activateElem(window.util.adElements);
     activateElem(window.form.mapFilters);
