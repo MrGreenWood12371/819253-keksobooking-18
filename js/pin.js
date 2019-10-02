@@ -13,6 +13,6 @@ window.pin = (function () {
     pinImage.setAttribute('src', objects.author.avatar);
     pinElement.setAttribute('alt', objects.offer.title);
 
-    return pinElement;
+    return pinElement;//
   }
 })();
