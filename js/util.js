@@ -10,6 +10,7 @@ window.util = (function () {
     OFFER_TIME: ['12:00', '13:00', '14:00'],
     FEATURES: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
     AVATAR_SIZE: 40,
+    MAIN_PIN_SIZE: 65,
     onCardEscClick: function (evt) {
       if (evt.keyCode === window.util.ESC_KEYCODE) {
         window.util.closeCard();

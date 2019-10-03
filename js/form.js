@@ -12,6 +12,24 @@ window.form = (function () {
   var MAP = document.querySelector('.map');
   var mapFilters = window.map.MAP.querySelector('.map__filters-container');
   var mainPin = document.querySelector('.map__pin--main');
+  var roomPrice = window.util.adForm.querySelector('#price');
+  var hotelAddress = document.querySelector('#address');
+  var START_POSITION_X = 570;
+  var START_POSITION_Y = 375;
+  var roomsType = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
+  var ONE_ROOM = 1;
+  var TWO_ROOMS = 2;
+  var THREE_ROOMS = 3;
+  var ONE_HUNDED_ROOMS = 100;
+  var ONE_GUEST = 2;
+  var TWO_GUESTS = 1;
+  var THREE_GUEST = 0;
+  var NON_GUESTS = 3;
 
   function disableElem(arr, elem) {
     for (var i = 0; i < arr.length; i++) {
@@ -31,26 +49,26 @@ window.form = (function () {
   function calculateRoomsAndCapacity() {
     var roomNumber = window.util.adForm.querySelector('#room_number').value;
 
-    switch (roomNumber) {
-      case '1':
-        disableElem(capacityOptions, 2);
-        capacityOptions[2].selected = true;
-        activateCapacity(capacityOptions, [2]);
+    switch (+roomNumber) {
+      case ONE_ROOM:
+        disableElem(capacityOptions, ONE_GUEST);
+        capacityOptions[ONE_GUEST].selected = true;
+        activateCapacity(capacityOptions, [ONE_GUEST]);
         break;
-      case '2':
-        disableElem(capacityOptions, 1);
-        activateCapacity(capacityOptions, [1, 2]);
-        capacityOptions[1].selected = true;
+      case TWO_ROOMS:
+        disableElem(capacityOptions, TWO_GUESTS);
+        activateCapacity(capacityOptions, [TWO_GUESTS, ONE_GUEST]);
+        capacityOptions[TWO_GUESTS].selected = true;
         break;
-      case '3':
-        disableElem(capacityOptions, 0);
-        activateCapacity(capacityOptions, [0, 1, 2]);
-        capacityOptions[0].selected = true;
+      case THREE_ROOMS:
+        disableElem(capacityOptions, THREE_GUEST);
+        activateCapacity(capacityOptions, [THREE_GUEST, TWO_GUESTS, ONE_GUEST]);
+        capacityOptions[THREE_GUEST].selected = true;
         break;
-      case '100':
-        disableElem(capacityOptions, 3);
-        activateCapacity(capacityOptions, [3]);
-        capacityOptions[3].selected = true;
+      case ONE_HUNDED_ROOMS:
+        disableElem(capacityOptions, NON_GUESTS);
+        activateCapacity(capacityOptions, [NON_GUESTS]);
+        capacityOptions[NON_GUESTS].selected = true;
         break;
     }
   }
@@ -67,35 +85,11 @@ window.form = (function () {
 
   disableElem(mapFilters);
 
-  function calculateMinPrice() {
-    var roomType = window.util.adForm.querySelector('#type').value;
-    var roomPrice = window.util.adForm.querySelector('#price');
-
-    switch (roomType) {
-      case 'bungalo':
-        roomPrice.setAttribute('min', '0');
-        roomPrice.setAttribute('placeholder', '0');
-        break;
-      case 'flat':
-        roomPrice.setAttribute('min', '1000');
-        roomPrice.setAttribute('placeholder', '1000');
-        break;
-      case 'house':
-        roomPrice.setAttribute('min', '5000');
-        roomPrice.setAttribute('placeholder', '5000');
-        break;
-      case 'palace':
-        roomPrice.setAttribute('min', '10000');
-        roomPrice.setAttribute('placeholder', '10000');
-        break;
-    }
-  }
-
-  function onRoomTypeChange() {
-    calculateMinPrice();
-  }
-
-  roomTypeInput.addEventListener('change', onRoomTypeChange);
+  roomTypeInput.addEventListener('change', function () {
+    var minPrice = roomsType[roomTypeInput.value];
+    roomPrice.min = minPrice;
+    roomPrice.placeholder = minPrice;
+  });
 
   function calculateInTime() {
     switch (checkInTime.value) {
@@ -145,6 +139,9 @@ window.form = (function () {
     similarPins.forEach(function (el) {
       el.remove();
     });
+    hotelAddress.value = 602 + ', ' + 440;
+    mainPin.style.top = START_POSITION_Y + 'px';
+    mainPin.style.left = START_POSITION_X + 'px';
     window.util.adForm.classList.add('ad-form--disabled');
     mainPin.addEventListener('click', window.map.openMap);
   }
