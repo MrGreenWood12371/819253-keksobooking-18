@@ -26,7 +26,7 @@ window.map = (function () {
 
   function openPin(evt, i) {
     window.util.closeCard();
-    cardFragment.appendChild(window.card.renderRentDescription(window.data.getNewRent(window.data.getOfferDescription('hi', 'kupislona'), window.util.OFFER_TYPES, 2, 2, window.util.getOfferTime(window.util.OFFER_TIME, window.util.OFFER_TIME), window.util.FEATURES), i));
+    cardFragment.appendChild(window.card.renderRentDescription(window.data.rents, i));
     window.form.mapFilters.prepend(cardFragment);
     var openedCard = document.querySelector('.map__card');
     openedCard.querySelector('.popup__close').addEventListener('click', window.util.closeCard);
@@ -47,12 +47,14 @@ window.map = (function () {
   }
 
   function openMap() {
-    window.pin.addPinToTemplate();
     window.map.MAP.classList.remove('map--faded');
     activateElem(window.util.adElements);
     activateElem(window.form.mapFilters);
+    window.pin.addPinsToTemplate();
     window.util.adForm.classList.remove('ad-form--disabled');
-    pins.appendChild(window.util.fragment);
+    if (window.util.fragment.children) {
+      pins.appendChild(window.util.fragment);
+    }
     var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     addPinListeners(pinElements);
     mainPin.removeEventListener('click', openMap);
