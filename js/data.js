@@ -3,6 +3,7 @@ window.data = (function () {
   var rents = [];
   var node = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
   var closeButton = node.querySelector('.error__button');
+
   function onErrorButtonClick() {
     closeButton.removeEventListener('click', onErrorButtonClick);
     node.remove();
