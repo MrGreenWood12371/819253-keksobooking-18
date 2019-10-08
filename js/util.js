@@ -20,7 +20,7 @@ window.util = (function () {
       var mapCard = document.querySelector('.map__card');
       if (mapCard) {
         mapCard.remove();
-        mapCard.querySelector('.popup__close').removeEventListener('click', this.closeCard);
+        mapCard.querySelector('.popup__close').removeEventListener('click', window.util.closeCard);
         document.removeEventListener('keydown', window.util.onCardEscClick);
       }
     },

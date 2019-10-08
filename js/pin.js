@@ -5,17 +5,16 @@ window.pin = (function () {
     var pinElement = PIN_TEMPLATE.cloneNode(true);
     var pinImage = pinElement.querySelector('img');
 
-    pinElement.setAttribute('style', 'left: ' + (+objects.location.x - (window.util.AVATAR_SIZE / 2)) + 'px; ' + 'top: ' + (+objects.location.y - window.util.AVATAR_SIZE) + 'px;');
+    pinElement.setAttribute('style', 'left: ' + (objects.location.x - (window.util.AVATAR_SIZE / 2)) + 'px; ' + 'top: ' + (objects.location.y - window.util.AVATAR_SIZE) + 'px;');
     pinImage.setAttribute('src', objects.author.avatar);
     pinElement.setAttribute('alt', objects.offer.title);
 
     return pinElement;
   }
-
   return {
-    addPinToTemplate: function () {
-      for (var j = 0; j < window.data.RENTS_NUMBER; j++) {
-        window.util.fragment.appendChild(renderNewRent(window.data.getNewRent(window.data.getOfferDescription('hi', 'kupislona'), window.util.OFFER_TYPES, 2, 2, window.util.getOfferTime(window.util.OFFER_TIME, window.util.OFFER_TIME), window.util.FEATURES)[j]));
+    addPinsToTemplate: function () {
+      for (var j = 0; j < 8; j++) {
+        window.util.fragment.appendChild(renderNewRent(window.data.rents[j]));
       }
     }
   };
