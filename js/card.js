@@ -22,9 +22,16 @@ window.card = (function () {
       cardAddress.textContent = objects[i].offer.address;
       cardPrice.textContent = objects[i].offer.price;
       cardType.textContent = objects[i].offer.type;
-      cardGuests.textContent = objects[i].offer.rooms + ' комнаты для ' + objects[i].offer.guests + 'гостей';
+      cardGuests.textContent = objects[i].offer.rooms + ' комнаты для ' + objects[i].offer.guests + ' гостей';
       cardTime.textContent = 'заезд после ' + objects[i].offer.checkin + ', выезд до ' + objects[i].offer.checkout;
-      cardFeatures.textContent = objects[i].offer.features;
+
+      cardFeatures.innerHTML = '';
+
+      objects[i].offer.features.forEach(function (item) {
+        var cardFeature = document.createElement('li');
+        cardFeature.classList.add('popup__feature', 'popup__feature--' + item);
+        cardFeatures.appendChild(cardFeature);
+      });
       cardDescription.textContent = objects[i].offer.description;
 
       objects[i].offer.photos.forEach(function (item) {
