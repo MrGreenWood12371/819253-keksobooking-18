@@ -61,6 +61,4 @@
   }
 
   houseTypeFilter.addEventListener('change', updatePins);
-
-
 })();
