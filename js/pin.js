@@ -1,7 +1,7 @@
 'use strict';
 window.pin = (function () {
   var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
-  var PINS_NUMBER = 8;
+  var PINS_NUMBER = 5;
   function renderNewRent(objects) {
     var pinElement = PIN_TEMPLATE.cloneNode(true);
     var pinImage = pinElement.querySelector('img');
@@ -17,6 +17,7 @@ window.pin = (function () {
       for (var j = 0; j < PINS_NUMBER; j++) {
         window.util.fragment.appendChild(renderNewRent(window.data.rents[j]));
       }
-    }
+    },
+    renderNewRent: renderNewRent
   };
 })();
