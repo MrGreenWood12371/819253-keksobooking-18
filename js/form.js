@@ -45,43 +45,28 @@ window.form = (function () {
     'fourteen': 2
   };
 
-  function disableElem(arr, elem) {
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i] === elem) {
-        continue;
-      }
-      arr[i].setAttribute('disabled', '');
-    }
-  }
-
-  function activateCapacity(elem, arr) {
-    for (var i = 0; i < arr.length; i++) {
-      elem[arr[i]].removeAttribute('disabled');
-    }
-  }
-
   function calculateRoomsAndCapacity() {
     var roomNumber = window.util.adForm.querySelector('#room_number').value;
 
     switch (+roomNumber) {
       case ONE_ROOM:
-        disableElem(capacityOptions, ONE_GUEST);
+        window.util.disableElem(capacityOptions, ONE_GUEST);
         capacityOptions[ONE_GUEST].selected = true;
-        activateCapacity(capacityOptions, [ONE_GUEST]);
+        window.util.activateCapacity(capacityOptions, [ONE_GUEST]);
         break;
       case TWO_ROOMS:
-        disableElem(capacityOptions, TWO_GUESTS);
-        activateCapacity(capacityOptions, [TWO_GUESTS, ONE_GUEST]);
+        window.util.disableElem(capacityOptions, TWO_GUESTS);
+        window.util.activateCapacity(capacityOptions, [TWO_GUESTS, ONE_GUEST]);
         capacityOptions[TWO_GUESTS].selected = true;
         break;
       case THREE_ROOMS:
-        disableElem(capacityOptions, THREE_GUEST);
-        activateCapacity(capacityOptions, [THREE_GUEST, TWO_GUESTS, ONE_GUEST]);
+        window.util.disableElem(capacityOptions, THREE_GUEST);
+        window.util.activateCapacity(capacityOptions, [THREE_GUEST, TWO_GUESTS, ONE_GUEST]);
         capacityOptions[THREE_GUEST].selected = true;
         break;
       case ONE_HUNDED_ROOMS:
-        disableElem(capacityOptions, NON_GUESTS);
-        activateCapacity(capacityOptions, [NON_GUESTS]);
+        window.util.disableElem(capacityOptions, NON_GUESTS);
+        window.util.activateCapacity(capacityOptions, [NON_GUESTS]);
         capacityOptions[NON_GUESTS].selected = true;
         break;
     }
@@ -95,9 +80,9 @@ window.form = (function () {
     calculateRoomsAndCapacity();
   }
 
-  disableElem(window.util.adElements);
+  window.util.disableElem(window.util.adElements);
 
-  disableElem(mapFilters);
+  window.util.disableElem(mapFilters);
 
   roomTypeInput.addEventListener('change', function () {
     var minPrice = roomsType[roomTypeInput.value];
@@ -154,8 +139,8 @@ window.form = (function () {
     window.util.closeCard();
     var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     MAP.classList.add('map--faded');
-    disableElem(window.util.adElements);
-    disableElem(window.form.mapFilters);
+    window.util.disableElem(window.util.adElements);
+    window.util.disableElem(window.form.mapFilters);
     similarPins.forEach(function (el) {
       el.remove();
     });

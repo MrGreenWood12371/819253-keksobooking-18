@@ -127,7 +127,6 @@ window.map = (function () {
   return {
     MAP: document.querySelector('.map'),
     openMap: openMap,
-    openPin: openPin,
     addPinListeners: addPinListeners
   };
 })();

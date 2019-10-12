@@ -11,6 +11,20 @@ window.util = (function () {
     FEATURES: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
     AVATAR_SIZE: 40,
     MAIN_PIN_SIZE: 65,
+    PINS_NUMBER: 5,
+    disableElem: function (arr, elem) {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === elem) {
+          continue;
+        }
+        arr[i].setAttribute('disabled', '');
+      }
+    },
+    activateCapacity: function (elem, arr) {
+      for (var i = 0; i < arr.length; i++) {
+        elem[arr[i]].removeAttribute('disabled');
+      }
+    },
     onCardEscClick: function (evt) {
       if (evt.keyCode === window.util.ESC_KEYCODE) {
         window.util.closeCard();
@@ -26,15 +40,6 @@ window.util = (function () {
     },
     getRandomValue: function (arr) {
       return Math.floor(Math.random() * arr.length);
-    },
-    getRandomInt: function (min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
-    },
-    getOfferTime: function (checkin, checkout) {
-      return [
-        checkin[window.util.getRandomValue(checkin)],
-        checkout[window.util.getRandomValue(checkout)],
-      ];
     }
   };
 })();

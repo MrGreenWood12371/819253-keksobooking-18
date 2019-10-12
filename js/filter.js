@@ -38,7 +38,7 @@
       }
       return rankDiff;
     });
-    for (var j = 0; j < 5; j++) {
+    for (var j = 0; j < window.util.PINS_NUMBER; j++) {
       if (rentsCopy[j].offer.type === houseTypeFilter.value) {
         window.util.fragment.appendChild(window.pin.renderNewRent(rentsCopy[j]));
       }
