@@ -1,5 +1,6 @@
 'use strict';
 window.util = (function () {
+  var DEBOUNCE_INTERVAL = 300;
   return {
     ENTER_KEYCODE: 13,
     ESC_KEYCODE: 27,
@@ -24,6 +25,18 @@ window.util = (function () {
       for (var i = 0; i < arr.length; i++) {
         elem[arr[i]].removeAttribute('disabled');
       }
+    },
+    debounce: function (fun) {
+      var lastTimeout = null;
+      return function () {
+        var args = arguments;
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(function () {
+          fun.apply(null, args);
+        }, DEBOUNCE_INTERVAL);
+      };
     },
     onCardEscClick: function (evt) {
       if (evt.keyCode === window.util.ESC_KEYCODE) {

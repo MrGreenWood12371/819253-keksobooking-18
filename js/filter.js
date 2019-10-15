@@ -1,57 +1,60 @@
 'use strict';
 (function () {
 
-  var houseTypeFilter = document.querySelector('#housing-type');
+  var PINS_LIMIT = 5;
 
-  function houseTypeComparator(left, right) {
-    if (left > right) {
-      return 1;
-    } else if (left < right) {
-      return -1;
-    } else {
-      return 0;
+  var PriceRange = {
+    LOW: {
+      MIN: 0,
+      MAX: 10000
+    },
+    MIDDLE: {
+      MIN: 10000,
+      MAX: 50000
+    },
+    HIGH: {
+      MIN: 50000,
+      MAX: Infinity
     }
-  }
+  };
 
-  function getRank(rent) {
-    var rank = 0;
+  var filter = document.querySelector('.map__filters');
+  var filterItems = filter.querySelectorAll('select, input');
+  var typeSelect = filter.querySelector('#housing-type');
+  var priceSelect = filter.querySelector('#housing-price');
+  var roomsSelect = filter.querySelector('#housing-rooms');
+  var guestsSelect = filter.querySelector('#housing-guests');
+  var featuresFieldset = filter.querySelector('#housing-features');
+  var data = [];
+  var filteredData = [];
 
-    if (rent.offer.type === houseTypeFilter.value) {
-      rank += 2;
-    }
+  var filtrationItem = function (it, item, key) {
+    return it.value === 'any' ? true : it.value === item[key].toString();
+  };
 
-    return rank;
-  }
+  var filtrationByType = function (item) {
+    return filtrationItem(typeSelect, item.offer, 'type');
+  };
 
-  function updatePins() {
-    window.util.closeCard();
-    var rentsCopy = window.data.rents.map(function (it) {
-      return it;
+  var filtrationByPrice = function (item) {
+    var filteringPrice = PriceRange[priceSelect.value.toUpperCase()];
+    return filteringPrice ? item.offer.price >= filteringPrice.MIN && item.offer.price <= filteringPrice.MAX : true;
+  };
+
+  var filtrationByRooms = function (item) {
+    return filtrationItem(roomsSelect, item.offer, 'rooms');
+  };
+
+  var filtrationByGuests = function (item) {
+    return filtrationItem(guestsSelect, item.offer, 'guests');
+  };
+
+  var filtrationByFeatures = function (item) {
+    var checkedFeaturesItems = featuresFieldset.querySelectorAll('input:checked');
+    return Array.from(checkedFeaturesItems).every(function (element) {
+      return item.offer.features.includes(element.value);
     });
-    removePins();
-    var pins = document.querySelector('.map__pins');
-
-    rentsCopy.sort(function (left, right) {
-      var rankDiff = getRank(right) - getRank(left);
-      if (rankDiff === 0) {
-        rankDiff = houseTypeComparator(left.offer.type, right.offer.type);
-      }
-      return rankDiff;
-    });
-    for (var j = 0; j < window.util.PINS_NUMBER; j++) {
-      if (rentsCopy[j].offer.type === houseTypeFilter.value) {
-        window.util.fragment.appendChild(window.pin.renderNewRent(rentsCopy[j]));
-      }
-      if (houseTypeFilter.value === 'any') {
-        window.util.fragment.appendChild(window.pin.renderNewRent(window.data.rents[j]));
-      }
-    }
-
-    pins.appendChild(window.util.fragment);
-
-    var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.map.addPinListeners(pinElements, rentsCopy);
-  }
+  };
 
   function removePins() {
     var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -60,5 +63,55 @@
     });
   }
 
-  houseTypeFilter.addEventListener('change', updatePins);
+  var onFilterChange = window.util.debounce(function () {
+    filteredData = data.slice(0);
+    var pins = document.querySelector('.map__pins');
+    filteredData = filteredData.filter(filtrationByType).filter(filtrationByPrice).filter(filtrationByRooms).filter(filtrationByGuests).filter(filtrationByFeatures);
+
+    window.util.closeCard();
+    removePins();
+    window.pin.addPinsToTemplate(filteredData.slice(0, PINS_LIMIT));
+    pins.appendChild(window.util.fragment);
+    window.filter.data = filteredData.slice(0, PINS_LIMIT);
+  });
+
+  var activateFilter = function () {
+    filterItems.forEach(function (it) {
+      it.disabled = false;
+    });
+    filter.addEventListener('change', onFilterChange);
+  };
+
+  var resetFilter = function () {
+    filterItems.forEach(function (it) {
+      it.value = 'any';
+    });
+    var featuresItems = featuresFieldset.querySelectorAll('input');
+    featuresItems.forEach(function (feature) {
+      feature.checked = false;
+    });
+  };
+
+  var deactivateFilter = function () {
+    filterItems.forEach(function (it) {
+      it.disabled = true;
+    });
+    resetFilter();
+    filter.removeEventListener('change', onFilterChange);
+  };
+
+  var activateFiltration = function (adData) {
+    data = adData.slice(0);
+    activateFilter();
+    return adData.slice(0, PINS_LIMIT);
+  };
+
+  var deactivateFiltration = function () {
+    deactivateFilter();
+  };
+
+  window.filter = {
+    activate: activateFiltration,
+    deactivate: deactivateFiltration
+  };
 })();

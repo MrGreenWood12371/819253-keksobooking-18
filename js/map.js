@@ -56,13 +56,14 @@ window.map = (function () {
     window.map.MAP.classList.remove('map--faded');
     activateElem(window.util.adElements);
     activateElem(window.form.mapFilters);
-    window.pin.addPinsToTemplate();
+    window.pin.addPinsToTemplate(window.data.rents);
     window.util.adForm.classList.remove('ad-form--disabled');
     renderPins();
     var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     addPinListeners(pinElements, window.data.rents);
     mainPin.removeEventListener('click', openMap);
     mainPin.removeEventListener('keydown', onPinEnterPress);
+    window.filter.activate(window.data.rents);
   }
 
   mainPin.addEventListener('mousedown', function (evt) {
