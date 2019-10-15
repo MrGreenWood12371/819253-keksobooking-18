@@ -86,6 +86,7 @@
     filterItems.forEach(function (it) {
       it.value = 'any';
     });
+
     var featuresItems = featuresFieldset.querySelectorAll('input');
     featuresItems.forEach(function (feature) {
       feature.checked = false;
