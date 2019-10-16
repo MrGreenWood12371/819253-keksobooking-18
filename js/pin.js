@@ -13,10 +13,9 @@ window.pin = (function () {
   }
   return {
     addPinsToTemplate: function (data) {
-      for (var j = 0; j < window.util.PINS_NUMBER; j++) {
-        window.util.fragment.appendChild(renderNewRent(data[j]));
-      }
-    },
-    renderNewRent: renderNewRent
+      data.forEach(function (it) {
+        window.util.fragment.appendChild(renderNewRent(it));
+      });
+    }
   };
 })();

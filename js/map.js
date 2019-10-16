@@ -35,7 +35,7 @@ window.map = (function () {
 
   function addPinListeners(elements, obj) {
     elements.forEach(function (el, i) {
-      elements[i].addEventListener('click', function (evt) {
+      el.addEventListener('click', function (evt) {
         openPin(evt, i, obj);
       });
     });
@@ -56,7 +56,7 @@ window.map = (function () {
     window.map.MAP.classList.remove('map--faded');
     activateElem(window.util.adElements);
     activateElem(window.form.mapFilters);
-    window.pin.addPinsToTemplate(window.data.rents);
+    window.pin.addPinsToTemplate(window.data.rents.slice(0, 5));
     window.util.adForm.classList.remove('ad-form--disabled');
     renderPins();
     var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
