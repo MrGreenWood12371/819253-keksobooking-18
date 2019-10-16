@@ -9,7 +9,7 @@
 
   window.load = {};
 
-  var getData = function (onLoad, onError) {
+  function getData(onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = TIMEOUT;
@@ -31,7 +31,7 @@
     });
 
     return xhr;
-  };
+  }
 
   window.load.getData = function (onLoad, onError) {
     var xhr = getData(onLoad, onError);

@@ -1,8 +1,6 @@
 'use strict';
 (function () {
 
-  var PINS_LIMIT = 5;
-
   var PriceRange = {
     LOW: {
       MIN: 0,
@@ -28,33 +26,33 @@
   var data = [];
   var filteredData = [];
 
-  var filtrationItem = function (it, item, key) {
+  function filtrationItem(it, item, key) {
     return it.value === 'any' ? true : it.value === item[key].toString();
-  };
+  }
 
-  var filtrationByType = function (item) {
+  function filtrationByType(item) {
     return filtrationItem(typeSelect, item.offer, 'type');
-  };
+  }
 
-  var filtrationByPrice = function (item) {
+  function filtrationByPrice(item) {
     var filteringPrice = PriceRange[priceSelect.value.toUpperCase()];
     return filteringPrice ? item.offer.price >= filteringPrice.MIN && item.offer.price <= filteringPrice.MAX : true;
-  };
+  }
 
-  var filtrationByRooms = function (item) {
+  function filtrationByRooms(item) {
     return filtrationItem(roomsSelect, item.offer, 'rooms');
-  };
+  }
 
-  var filtrationByGuests = function (item) {
+  function filtrationByGuests(item) {
     return filtrationItem(guestsSelect, item.offer, 'guests');
-  };
+  }
 
-  var filtrationByFeatures = function (item) {
+  function filtrationByFeatures(item) {
     var checkedFeaturesItems = featuresFieldset.querySelectorAll('input:checked');
     return Array.from(checkedFeaturesItems).every(function (element) {
       return item.offer.features.includes(element.value);
     });
-  };
+  }
 
   function removePins() {
     var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -69,23 +67,23 @@
     filteredData = filteredData.filter(filtrationByType).filter(filtrationByPrice).filter(filtrationByRooms).filter(filtrationByGuests).filter(filtrationByFeatures);
     removePins();
     window.util.closeCard();
-    window.pin.addPinsToTemplate(filteredData.slice(0, PINS_LIMIT));
+    window.pin.addPinsToTemplate(filteredData.slice(0, window.util.PINS_NUMBER));
 
     pins.appendChild(window.util.fragment);
 
     var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.map.addPinListeners(pinElements, filteredData.slice(0, PINS_LIMIT));
+    window.map.addPinListeners(pinElements, filteredData.slice(0, window.util.PINS_NUMBER));
 
   });
 
-  var activateFilter = function () {
+  function activateFilter() {
     filterItems.forEach(function (it) {
       it.disabled = false;
     });
     filter.addEventListener('change', onFilterChange);
-  };
+  }
 
-  var resetFilter = function () {
+  function resetFilter() {
     filterItems.forEach(function (it) {
       it.value = 'any';
     });
@@ -93,25 +91,25 @@
     featuresItems.forEach(function (feature) {
       feature.checked = false;
     });
-  };
+  }
 
-  var deactivateFilter = function () {
+  function deactivateFilter() {
     filterItems.forEach(function (it) {
       it.disabled = true;
     });
     resetFilter();
     filter.removeEventListener('change', onFilterChange);
-  };
+  }
 
-  var activateFiltration = function (adData) {
+  function activateFiltration(adData) {
     data = adData.slice(0);
     activateFilter();
-    return adData.slice(0, PINS_LIMIT);
-  };
+    return adData.slice(0, window.util.PINS_NUMBER);
+  }
 
-  var deactivateFiltration = function () {
+  function deactivateFiltration() {
     deactivateFilter();
-  };
+  }
 
   window.filter = {
     activate: activateFiltration,
