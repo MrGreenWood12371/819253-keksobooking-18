@@ -1,6 +1,11 @@
 'use strict';
 
 window.form = (function () {
+  var MAP = document.querySelector('.map');
+  var FLAT_OPTION = 1;
+  var START_POSITION_X = 570;
+  var START_POSITION_Y = 375;
+  var DEFAULT_URL_SRC = 'img/muffin-grey.svg';
   var adSubmitButton = document.querySelector('.ad-form__submit');
   var roomsInputElement = window.util.adForm.querySelector('#room_number');
   var capacityInputElement = window.util.adForm.querySelector('#capacity');
@@ -10,16 +15,16 @@ window.form = (function () {
   var checkInTime = window.util.adForm.querySelector('#timein');
   var checkOutTime = window.util.adForm.querySelector('#timeout');
   var resetButton = document.querySelector('.ad-form__reset');
-  var MAP = document.querySelector('.map');
   var mapFilters = window.map.MAP.querySelector('.map__filters-container');
   var mainPin = document.querySelector('.map__pin--main');
   var roomPrice = window.util.adForm.querySelector('#price');
   var hotelAddress = document.querySelector('#address');
   var description = document.querySelector('#description');
   var features = document.querySelectorAll('.feature__checkbox');
-  var FLAT_OPTION = 1;
-  var START_POSITION_X = 570;
-  var START_POSITION_Y = 375;
+  var fieldAvatar = document.querySelector('#avatar');
+  var imageAvatar = document.querySelector('.ad-form-header__preview img');
+  var fieldImages = document.querySelector('#images');
+
   var roomsType = {
     'bungalo': 0,
     'flat': 1000,
@@ -132,15 +137,27 @@ window.form = (function () {
     }
   }
 
+  function imagesRemove() {
+    fieldAvatar.value = '';
+    imageAvatar.src = DEFAULT_URL_SRC;
+    fieldImages.value = '';
+    var addedImages = document.querySelectorAll('.ad-form__photo--added');
+    if (addedImages) {
+      addedImages.forEach(function (it) {
+        it.remove();
+      });
+    }
+  }
+
   checkInTime.addEventListener('change', onInTimeChange);
   checkOutTime.addEventListener('change', onOutTimeChange);
 
   function mapReset() {
     window.util.closeCard();
-    window.image.remove();
     window.image.deactivate();
     var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     MAP.classList.add('map--faded');
+    imagesRemove();
     window.util.disableElem(window.util.adElements);
     window.util.disableElem(window.form.mapFilters);
     similarPins.forEach(function (el) {

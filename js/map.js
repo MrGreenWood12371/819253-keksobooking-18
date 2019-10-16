@@ -1,13 +1,13 @@
 'use strict';
 window.map = (function () {
-  var cardFragment = document.createDocumentFragment();
-  var pins = document.querySelector('.map__pins');
-  var hotelAddress = document.querySelector('#address');
-  var mainPin = document.querySelector('.map__pin--main');
   var TOP_LIMIT = 65;
   var BOTTOM_LIMIT = 565;
   var LEFT_LIMIT = -25;
   var RIGHT_LIMIT = 1160;
+  var cardFragment = document.createDocumentFragment();
+  var pins = document.querySelector('.map__pins');
+  var hotelAddress = document.querySelector('#address');
+  var mainPin = document.querySelector('.map__pin--main');
 
   mainPin.addEventListener('click', openMap);
   mainPin.addEventListener('keydown', onPinEnterPress);
