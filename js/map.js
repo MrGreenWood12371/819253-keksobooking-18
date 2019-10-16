@@ -64,6 +64,7 @@ window.map = (function () {
     mainPin.removeEventListener('click', openMap);
     mainPin.removeEventListener('keydown', onPinEnterPress);
     window.filter.activate(window.data.rents);
+    window.image.activate();
   }
 
   mainPin.addEventListener('mousedown', function (evt) {

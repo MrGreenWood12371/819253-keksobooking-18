@@ -137,6 +137,8 @@ window.form = (function () {
 
   function mapReset() {
     window.util.closeCard();
+    window.image.remove();
+    window.image.deactivate();
     var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     MAP.classList.add('map--faded');
     window.util.disableElem(window.util.adElements);
