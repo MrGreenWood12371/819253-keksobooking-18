@@ -70,6 +70,8 @@ window.data = (function () {
     window.pin.addPinsToTemplate(window.data.rents.slice(0, window.util.PINS_NUMBER));
     pins.appendChild(window.util.fragment);
     window.filter.activate(window.data.rents);
+    var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.map.addPinListeners(pinElements, window.data.rents);
   }
 
   var form = document.querySelector('.ad-form');

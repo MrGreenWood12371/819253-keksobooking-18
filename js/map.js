@@ -51,8 +51,6 @@ window.map = (function () {
     window.map.MAIN.classList.remove('map--faded');
     activateElem(window.util.adElements);
     window.util.adForm.classList.remove('ad-form--disabled');
-    var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    addPinListeners(pinElements, window.data.rents);
     mainPin.removeEventListener('click', openMap);
     mainPin.removeEventListener('keydown', onPinEnterPress);
     window.image.activate();
