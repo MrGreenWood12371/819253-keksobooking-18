@@ -5,6 +5,17 @@ window.form = (function () {
   var FLAT_OPTION = 1;
   var START_POSITION_X = 570;
   var START_POSITION_Y = 375;
+  var ONE_ROOM = 1;
+  var TWO_ROOMS = 2;
+  var THREE_ROOMS = 3;
+  var ONE_HUNDED_ROOMS = 100;
+  var ONE_GUEST = 2;
+  var TWO_GUESTS = 1;
+  var THREE_GUEST = 0;
+  var NON_GUESTS = 3;
+  var STOCK_POSITION_X = 602;
+  var STOCK_POSITION_Y = 440;
+  var STOCK_ROOM_PRICE = '1000';
   var DEFAULT_URL_SRC = 'img/muffin-grey.svg';
   var adSubmitButton = document.querySelector('.ad-form__submit');
   var roomsInputElement = window.util.adForm.querySelector('#room_number');
@@ -15,7 +26,7 @@ window.form = (function () {
   var checkInTime = window.util.adForm.querySelector('#timein');
   var checkOutTime = window.util.adForm.querySelector('#timeout');
   var resetButton = document.querySelector('.ad-form__reset');
-  var mapFilters = window.map.MAP.querySelector('.map__filters-container');
+  var mapFilters = window.map.MAIN.querySelector('.map__filters-container');
   var mainPin = document.querySelector('.map__pin--main');
   var roomPrice = window.util.adForm.querySelector('#price');
   var hotelAddress = document.querySelector('#address');
@@ -31,14 +42,7 @@ window.form = (function () {
     'house': 5000,
     'palace': 10000
   };
-  var ONE_ROOM = 1;
-  var TWO_ROOMS = 2;
-  var THREE_ROOMS = 3;
-  var ONE_HUNDED_ROOMS = 100;
-  var ONE_GUEST = 2;
-  var TWO_GUESTS = 1;
-  var THREE_GUEST = 0;
-  var NON_GUESTS = 3;
+
   var Time = {
     'twelve': '12:00',
     'thirteen': '13:00',
@@ -95,46 +99,32 @@ window.form = (function () {
     roomPrice.placeholder = minPrice;
   });
 
-  function calculateInTime() {
-    switch (checkInTime.value) {
+  function calculateInOutTime(timeType, time) {
+    switch (timeType.value) {
       case Time.twelve:
-        checkOutTime.options[timeToOption.twelve].selected = true;
+        time.options[timeToOption.twelve].selected = true;
         break;
       case Time.thirteen:
-        checkOutTime.options[timeToOption.thirteen].selected = true;
+        time.options[timeToOption.thirteen].selected = true;
         break;
       case Time.fourteen:
-        checkOutTime.options[timeToOption.fourteen].selected = true;
-        break;
-    }
-  }
-
-  function calculateOutTime() {
-    switch (checkOutTime.value) {
-      case Time.twelve:
-        checkInTime.options[timeToOption.twelve].selected = true;
-        break;
-      case Time.thirteen:
-        checkInTime.options[timeToOption.thirteen].selected = true;
-        break;
-      case Time.fourteen:
-        checkInTime.options[timeToOption.fourteen].selected = true;
+        time.options[timeToOption.fourteen].selected = true;
         break;
     }
   }
 
   function onInTimeChange() {
-    calculateInTime();
+    calculateInOutTime(checkInTime, checkOutTime);
   }
 
   function onOutTimeChange() {
-    calculateOutTime();
+    calculateInOutTime(checkOutTime, checkInTime);
   }
 
   function resetFeatures(arr) {
-    for (var i = 0; i < arr.length; i++) {
-      arr[i].checked = false;
-    }
+    arr.forEach(function (it) {
+      it.checked = false;
+    });
   }
 
   function imagesRemove() {
@@ -166,7 +156,7 @@ window.form = (function () {
     });
     adTitle.value = '';
     roomTypeInput.options[FLAT_OPTION].selected = true;
-    roomPrice.placeholder = '1000';
+    roomPrice.placeholder = STOCK_ROOM_PRICE;
     roomPrice.value = '';
     roomsInputElement.options[0].selected = true;
     capacityInputElement.options[ONE_GUEST].selected = true;
@@ -174,7 +164,7 @@ window.form = (function () {
     description.value = '';
     checkInTime.options[timeToOption.twelve].selected = true;
     checkOutTime.options[timeToOption.twelve].selected = true;
-    hotelAddress.value = 602 + ', ' + 440;
+    hotelAddress.value = STOCK_POSITION_X + ', ' + STOCK_POSITION_Y;
     mainPin.style.top = START_POSITION_Y + 'px';
     mainPin.style.left = START_POSITION_X + 'px';
     window.util.adForm.classList.add('ad-form--disabled');

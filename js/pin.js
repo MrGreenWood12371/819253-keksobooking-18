@@ -1,8 +1,8 @@
 'use strict';
 window.pin = (function () {
-  var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   function renderNewRent(objects) {
-    var pinElement = PIN_TEMPLATE.cloneNode(true);
+    var pinElement = pinTemplate.cloneNode(true);
     var pinImage = pinElement.querySelector('img');
 
     pinElement.setAttribute('style', 'left: ' + (objects.location.x - (window.util.AVATAR_SIZE / 2)) + 'px; ' + 'top: ' + (objects.location.y - window.util.AVATAR_SIZE) + 'px;');

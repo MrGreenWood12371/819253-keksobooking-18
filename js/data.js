@@ -4,6 +4,7 @@ window.data = (function () {
   var node = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
   var successNode = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
   var closeButton = node.querySelector('.error__button');
+  var pins = document.querySelector('.map__pins');
 
   function onErrorButtonClick() {
     closeButton.removeEventListener('click', onErrorButtonClick);
@@ -63,11 +64,13 @@ window.data = (function () {
   }
 
   function onSuccess(arr) {
-    for (var i = 0; i < arr.length; i++) {
-      rents.push(arr[i]);
-    }
+    arr.forEach(function (it) {
+      rents.push(it);
+    });
+    window.pin.addPinsToTemplate(window.data.rents.slice(0, window.util.PINS_NUMBER));
+    pins.appendChild(window.util.fragment);
+    window.filter.activate(window.data.rents);
   }
-  window.load.getData(onSuccess, onError);
 
   var form = document.querySelector('.ad-form');
   form.addEventListener('submit', function (evt) {
@@ -79,6 +82,8 @@ window.data = (function () {
   });
 
   return {
-    rents: rents
+    rents: rents,
+    onSuccess: onSuccess,
+    onError: onError
   };
 })();

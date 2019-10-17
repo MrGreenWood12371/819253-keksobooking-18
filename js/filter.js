@@ -25,6 +25,7 @@
   var featuresFieldset = filter.querySelector('#housing-features');
   var data = [];
   var filteredData = [];
+  var featuresItems = featuresFieldset.querySelectorAll('input');
 
   function filterItem(it, item, key) {
     return it.value === 'any' ? true : it.value === item[key].toString();
@@ -54,6 +55,10 @@
     });
   }
 
+  function filterData(item) {
+    return filterByType(item) && filterByPrice(item) && filterByRooms(item) && filterByGuests(item) && filterByFeatures(item);
+  }
+
   function removePins() {
     var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     similarPins.forEach(function (el) {
@@ -64,7 +69,7 @@
   var onFilterChange = window.util.debounce(function () {
     var pins = document.querySelector('.map__pins');
     filteredData = data.slice(0);
-    filteredData = filteredData.filter(filterByType).filter(filterByPrice).filter(filterByRooms).filter(filterByGuests).filter(filterByFeatures);
+    filteredData = filteredData.filter(filterData);
     removePins();
     window.util.closeCard();
     window.pin.addPinsToTemplate(filteredData.slice(0, window.util.PINS_NUMBER));
@@ -87,7 +92,6 @@
     filterItems.forEach(function (it) {
       it.value = 'any';
     });
-    var featuresItems = featuresFieldset.querySelectorAll('input');
     featuresItems.forEach(function (feature) {
       feature.checked = false;
     });

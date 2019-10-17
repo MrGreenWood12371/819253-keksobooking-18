@@ -5,7 +5,6 @@ window.map = (function () {
   var LEFT_LIMIT = -25;
   var RIGHT_LIMIT = 1160;
   var cardFragment = document.createDocumentFragment();
-  var pins = document.querySelector('.map__pins');
   var hotelAddress = document.querySelector('#address');
   var mainPin = document.querySelector('.map__pin--main');
 
@@ -18,10 +17,10 @@ window.map = (function () {
     }
   }
 
-  function activateElem(elem) {
-    for (var i = 0; i < elem.length; i++) {
-      elem[i].removeAttribute('disabled');
-    }
+  function activateElem() {
+    window.util.adElements.forEach(function (it) {
+      it.removeAttribute('disabled');
+    });
   }
 
   function openPin(evt, i, obj) {
@@ -46,24 +45,16 @@ window.map = (function () {
     hotelAddress.value = coordsX + ', ' + coordsY;
   }
 
-  function renderPins() {
-    if (window.util.fragment.children) {
-      pins.appendChild(window.util.fragment);
-    }
-  }
-
   function openMap() {
-    window.map.MAP.classList.remove('map--faded');
+    window.load.getData(window.data.onSuccess, window.data.onError);
+
+    window.map.MAIN.classList.remove('map--faded');
     activateElem(window.util.adElements);
-    activateElem(window.form.mapFilters);
-    window.pin.addPinsToTemplate(window.data.rents.slice(0, 5));
     window.util.adForm.classList.remove('ad-form--disabled');
-    renderPins();
     var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     addPinListeners(pinElements, window.data.rents);
     mainPin.removeEventListener('click', openMap);
     mainPin.removeEventListener('keydown', onPinEnterPress);
-    window.filter.activate(window.data.rents);
     window.image.activate();
   }
 
@@ -127,7 +118,7 @@ window.map = (function () {
   });
 
   return {
-    MAP: document.querySelector('.map'),
+    MAIN: document.querySelector('.map'),
     openMap: openMap,
     addPinListeners: addPinListeners
   };

@@ -1,18 +1,18 @@
 'use strict';
 window.util = (function () {
-  var DEBOUNCE_INTERVAL = 300;
+  var DEBOUNCE_INTERVAL = 500;
   return {
     ENTER_KEYCODE: 13,
     ESC_KEYCODE: 27,
-    adForm: document.querySelector('.ad-form'),
-    adElements: document.querySelector('.ad-form').children,
-    fragment: document.createDocumentFragment(),
     OFFER_TYPES: ['palace', 'flat', 'house', 'bungalo'],
     OFFER_TIME: ['12:00', '13:00', '14:00'],
     FEATURES: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
     AVATAR_SIZE: 40,
     MAIN_PIN_SIZE: 65,
     PINS_NUMBER: 5,
+    adForm: document.querySelector('.ad-form'),
+    adElements: document.querySelector('.ad-form').querySelectorAll('fieldset'),
+    fragment: document.createDocumentFragment(),
     disableElem: function (arr, elem) {
       for (var i = 0; i < arr.length; i++) {
         if (arr[i] === elem) {
@@ -22,9 +22,9 @@ window.util = (function () {
       }
     },
     activateCapacity: function (elem, arr) {
-      for (var i = 0; i < arr.length; i++) {
-        elem[arr[i]].removeAttribute('disabled');
-      }
+      arr.forEach(function (it) {
+        elem[it].removeAttribute('disabled');
+      });
     },
     debounce: function (fun) {
       var lastTimeout = null;
