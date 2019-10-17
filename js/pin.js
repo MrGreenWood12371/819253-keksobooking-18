@@ -12,7 +12,7 @@ window.pin = (function () {
     return pinElement;
   }
   return {
-    addPinsToTemplate: function (data) {
+    addToTemplate: function (data) {
       data.forEach(function (it) {
         window.util.fragment.appendChild(renderNewRent(it));
       });

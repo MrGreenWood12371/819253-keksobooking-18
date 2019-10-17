@@ -72,7 +72,7 @@
     filteredData = filteredData.filter(filterData);
     removePins();
     window.util.closeCard();
-    window.pin.addPinsToTemplate(filteredData.slice(0, window.util.PINS_NUMBER));
+    window.pin.addToTemplate(filteredData.slice(0, window.util.PINS_NUMBER));
 
     pins.appendChild(window.util.fragment);
 

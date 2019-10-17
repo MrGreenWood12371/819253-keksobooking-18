@@ -168,7 +168,7 @@ window.form = (function () {
     mainPin.style.top = START_POSITION_Y + 'px';
     mainPin.style.left = START_POSITION_X + 'px';
     window.util.adForm.classList.add('ad-form--disabled');
-    mainPin.addEventListener('click', window.map.openMap);
+    mainPin.addEventListener('click', window.map.open);
   }
 
   resetButton.addEventListener('click', mapReset);

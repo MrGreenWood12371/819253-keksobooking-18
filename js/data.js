@@ -67,7 +67,7 @@ window.data = (function () {
     arr.forEach(function (it) {
       rents.push(it);
     });
-    window.pin.addPinsToTemplate(window.data.rents.slice(0, window.util.PINS_NUMBER));
+    window.pin.addToTemplate(window.data.rents.slice(0, window.util.PINS_NUMBER));
     pins.appendChild(window.util.fragment);
     window.filter.activate(window.data.rents);
     var pinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');

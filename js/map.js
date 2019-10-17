@@ -117,7 +117,7 @@ window.map = (function () {
 
   return {
     MAIN: document.querySelector('.map'),
-    openMap: openMap,
+    open: openMap,
     addPinListeners: addPinListeners
   };
 })();
