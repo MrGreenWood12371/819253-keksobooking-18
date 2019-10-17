@@ -155,6 +155,7 @@ window.form = (function () {
   function mapReset() {
     window.util.closeCard();
     window.image.deactivate();
+    window.filter.deactivate();
     var similarPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     MAP.classList.add('map--faded');
     imagesRemove();

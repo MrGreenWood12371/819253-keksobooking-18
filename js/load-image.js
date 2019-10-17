@@ -14,7 +14,7 @@
   var avatarChooser = document.querySelector('#avatar');
   var imageChooser = document.querySelector('#images');
 
-  function filtrationByCorrectType(file) {
+  function filterByCorrectType(file) {
     return FILE_TYPES.some(function (it) {
       return file.name.toLowerCase().endsWith(it);
     });
@@ -46,7 +46,7 @@
   }
 
   function loadFile(chooser, func) {
-    var files = Array.from(chooser.files).filter(filtrationByCorrectType);
+    var files = Array.from(chooser.files).filter(filterByCorrectType);
     if (files) {
       files.forEach(function (it) {
         var reader = new FileReader();
