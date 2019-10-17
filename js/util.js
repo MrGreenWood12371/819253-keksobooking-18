@@ -50,9 +50,6 @@ window.util = (function () {
         mapCard.querySelector('.popup__close').removeEventListener('click', window.util.closeCard);
         document.removeEventListener('keydown', window.util.onCardEscClick);
       }
-    },
-    getRandomValue: function (arr) {
-      return Math.floor(Math.random() * arr.length);
     }
   };
 })();
